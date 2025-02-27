@@ -15,15 +15,66 @@ def local_css():
     <style>
     .main {
         padding: 2rem;
+        background-color: #121212;
+        color: white;
     }
     h1, h2, h3 {
         margin-bottom: 1rem;
+        color: white;
+    }
+    p {
+        color: white;
+        line-height: 1.6;
     }
     .project-title {
-        color: #2c3e50;
+        color: white;
         margin-bottom: 15px;
     }
-
+    .tag {
+        display: inline-block;
+        background-color: #333;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 15px;
+        margin-right: 5px;
+        margin-bottom: 5px;
+        font-size: 14px;
+    }
+    /* Fix for white elements */
+    .stMarkdown, .stMarkdown p, .stMarkdown div {
+        color: white;
+        background-color: transparent;
+    }
+    /* Make sure containers don't have white backgrounds */
+    div.element-container, div.row-widget, div.stButton, div.stText, div.Widget {
+        background-color: transparent !important;
+        border: none !important;
+    }
+    /* Fix for white info boxes */
+    div.stAlert {
+        background-color: #1E1E1E !important;
+        color: white !important;
+        border: 1px solid #333 !important;
+    }
+    /* Sidebar styling */
+    .sidebar .sidebar-content {
+        background-color: #1E1E1E;
+    }
+    .sidebar-nav {
+        padding: 10px 0;
+    }
+    .sidebar-nav-item {
+        padding: 10px 15px;
+        border-radius: 5px;
+        margin-bottom: 8px;
+        transition: background-color 0.3s;
+    }
+    .sidebar-nav-item:hover {
+        background-color: #333;
+    }
+    .sidebar-nav-item.active {
+        background-color: #4d9fff;
+    }
     </style>
     """, unsafe_allow_html=True)
 
@@ -191,9 +242,24 @@ def display_project(
     st.markdown('</div>', unsafe_allow_html=True)
     st.divider()
 
-def projects():
+def main():
     local_css()
     
+    # Create sidebar for navigation
+    with st.sidebar:
+        st.title("Navigation")
+        st.markdown('<div class="sidebar-nav">', unsafe_allow_html=True)
+        
+        # Home link
+        st.sidebar.markdown("### Menu")
+        home = st.sidebar.button("Home", key="home", use_container_width=True)
+        if home:
+            st.switch_page("main.py")
+            
+        # Projects link (current page)
+        projects = st.sidebar.button("Projects", key="projects", use_container_width=True)
+    
+    # Main content
     st.title("My Projects")
     
     # Example of using the template for Project 1
@@ -244,7 +310,7 @@ def projects():
     # Example of using the template for Project 3
     display_project(
         title="Human Tracking System for Smart Wheelchair",
-        tags=["Commputer Vision", "IoT"],
+        tags=["Computer Vision", "Robotics"],
         description="""
             The system Leveraging YOLOv5 and byte track to create auto navigation by following human
             in front of the smart wheelchair captured by web camera. The system is embedded to Nvidia
@@ -263,4 +329,4 @@ def projects():
     )
 
 if __name__ == "__main__":
-    projects()
+    main()
