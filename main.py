@@ -23,6 +23,18 @@ st.markdown("""
         color: white;
         background-color: #121212;
     }
+    /* Responsive column fixes */
+    .row-widget.stHorizontal {
+        flex-wrap: wrap !important;
+    }
+    /* Make columns more responsive on smaller screens */
+    @media (max-width: 768px) {
+        div[data-testid="column"] {
+            width: 100% !important;
+            flex: 1 1 100% !important;
+            margin-bottom: 1rem;
+        }
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -85,10 +97,11 @@ def local_css():
         color: white !important;
         border: 1px solid #333 !important;
     }
-    /* Adjust intro section spacing - vertical alignment adjustments */
+    /* Improve responsive design for the intro section */
     .intro-section {
         display: flex;
         align-items: center;
+        flex-wrap: wrap;
     }
     .intro-text {
         display: flex;
@@ -96,12 +109,12 @@ def local_css():
         justify-content: center;
         height: 100%;
     }
-    /* Enhanced profile header styling with vertical alignment */
+    /* Enhanced profile header styling with better responsiveness */
     .profile-header {
         display: flex;
         flex-direction: column;
         margin-bottom: 40px;
-        padding-top: 20px; /* Add padding to vertically align with image */
+        padding-top: 20px;
     }
     .profile-name {
         font-size: 3.5rem;
@@ -124,15 +137,25 @@ def local_css():
         line-height: 1.7;
         margin-top: 1rem;
     }
-    /* New styles for better alignment */
+    /* New styles for better alignment and responsiveness */
     .image-container {
         display: flex;
         justify-content: center;
-        align-items: flex-start; /* Align to the top */
+        align-items: flex-start;
         height: 100%;
+        width: 100%;
     }
+    .image-container img {
+        max-width: 280px;
+        width: 100%;
+        height: auto;
+    }
+    /* Remove negative margin that was causing issues */
     .profile-header {
-        margin-left: -105px;
+        margin-left: 0;
+    }
+    .text-container {
+        width: 100%;
     }
     /* Sidebar styling */
     .sidebar .sidebar-content {
@@ -152,6 +175,18 @@ def local_css():
     }
     .sidebar-nav-item.active {
         background-color: #4d9fff;
+    }
+    /* Mobile responsiveness */
+    @media (max-width: 768px) {
+        .profile-title {
+            font-size: 1.5rem;
+        }
+        .profile-intro {
+            font-size: 1rem;
+        }
+        .image-container {
+            margin-bottom: 1.5rem;
+        }
     }
     </style>
     """, unsafe_allow_html=True)
@@ -173,25 +208,27 @@ def main():
         if projects:
             st.switch_page("pages/projects.py")
             
-    # Main content
-    # Changed the layout here - using two columns with different proportions
-    # First column for image, second for text
-    col1, col2 = st.columns([1, 2])
+    # Main content - Using containers for better responsiveness
+    st.markdown('<div class="intro-section">', unsafe_allow_html=True)
+    
+    # Create responsive columns with a container
+    col1, col2 = st.columns([1, 2], gap="large")
     
     with col1:
-        # Wrap the image in a container for better alignment
-        st.markdown("<div class='image-container'>", unsafe_allow_html=True)
-        # Profile picture
+        # Profile picture with responsive container
+        st.markdown('<div class="image-container">', unsafe_allow_html=True)
         profile_pic_path = "assets/photo.jpg"
-        profile_img = Image.open(profile_pic_path)
-        # Adjust image height to better match the text section height
-        st.image(profile_img, width=280, output_format="JPEG", clamp=True)
-        st.markdown("</div>", unsafe_allow_html=True)
+        try:
+            profile_img = Image.open(profile_pic_path)
+            st.image(profile_img, use_container_width=True, output_format="JPEG", clamp=True)
+        except Exception as e:
+            st.error(f"Could not load image: {e}")
+            st.write("Please ensure the image path is correct.")
+        st.markdown('</div>', unsafe_allow_html=True)
     
     with col2:
-        # Wrap the text in a container for better alignment
-        st.markdown("<div class='text-container'>", unsafe_allow_html=True)
-        # New enhanced header section with better styling
+        # Text content with responsive container
+        st.markdown('<div class="text-container">', unsafe_allow_html=True)
         st.markdown("""
         <div class="profile-header">
             <div class="profile-title">Welcome to my page! 🔥🔥🔥</div>
@@ -206,7 +243,7 @@ def main():
             </div>
         </div>
         """, unsafe_allow_html=True)
-        st.markdown("</div>", unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)
 
     # Skills section
     st.divider()
