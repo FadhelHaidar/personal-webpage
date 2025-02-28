@@ -264,7 +264,7 @@ def main():
     with col2:
         st.markdown("### Links")
         st.markdown("""
-        - [GitHub](https://github.com/fadhel1597)
+        - [GitHub](https://github.com/FadhelHaidar)
         - [LinkedIn](https://linkedin.com/in/fadhel-haidar)
         """)
 
