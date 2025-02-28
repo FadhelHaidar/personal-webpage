@@ -245,24 +245,23 @@ def display_project(
 def main():
     local_css()
     
-    # Create sidebar for navigation
     with st.sidebar:
         st.title("Navigation")
         st.markdown('<div class="sidebar-nav">', unsafe_allow_html=True)
         
-        # Home link
         st.sidebar.markdown("### Menu")
         home = st.sidebar.button("Home", key="home", use_container_width=True)
         if home:
             st.switch_page("main.py")
             
-        # Projects link (current page)
         projects = st.sidebar.button("Projects", key="projects", use_container_width=True)
+
+        papers = st.sidebar.button("Researches", key="researches", use_container_width=True)
+        if papers:
+            st.switch_page("pages/research.py")
     
-    # Main content
     st.title("My Projects")
     
-    # Example of using the template for Project 1
     display_project(
         title="Skin Analysis AI",
         tags=["Computer Vision"],
@@ -318,7 +317,7 @@ def main():
         """,
         key_features=[
             "Object Detection",
-            "IoT",
+            "Object Tracking",
         ],
         technologies=[
             "Nvidia Jetson",
@@ -326,6 +325,27 @@ def main():
             "Pytorch"
         ],
         video_url="https://youtu.be/F_w_tT8pDR4",
+    )
+
+    display_project(
+        title="Room Name Recognition System",
+        tags=["Computer Vision", "Robotics"],
+        description="""
+            The system contained object detection to detect the plate using YOLOv5 and read/recognize
+            the plate character using EasyOCR, the object captured using web camera. The system is
+            embedded to Nvidia Jetson TX2.
+            """,
+        key_features=[
+            "Object Detection",
+            "OCR",
+        ],
+        technologies=[
+            "Nvidia Jetson",
+            "Arduino",
+            "Pytorch",
+        ],
+        video_url="https://youtu.be/HYcV47oXoCE",
+
     )
 
 if __name__ == "__main__":

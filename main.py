@@ -192,47 +192,55 @@ def local_css():
     """, unsafe_allow_html=True)
 
 def main():
+    # Remove all other custom CSS that might be overriding our settings
+    # and just use the modified local_css() function
     local_css()
     
-    # Create sidebar
     with st.sidebar:
         st.title("Navigation")
         st.markdown('<div class="sidebar-nav">', unsafe_allow_html=True)
         
-        # Home link (current page)
         st.sidebar.markdown("### Menu")
         home = st.sidebar.button("Home", key="home", use_container_width=True)
         
-        # Projects link
         projects = st.sidebar.button("Projects", key="projects", use_container_width=True)
         if projects:
             st.switch_page("pages/projects.py")
+
+        papers = st.sidebar.button("Researches", key="researches", use_container_width=True)
+        if papers:
+            st.switch_page("pages/research.py")
             
-    # Main content - Using containers for better responsiveness
-    st.markdown('<div class="intro-section">', unsafe_allow_html=True)
+    st.markdown('<div class="intro-section" style="padding: 0; margin: 0;">', unsafe_allow_html=True)
     
-    # Create responsive columns with a container
-    col1, col2 = st.columns([1, 2], gap="large")
+    # Use a smaller gap to make the text move left
+    col1, col2 = st.columns([0.8, 2.2], gap="small")
     
     with col1:
-        # Profile picture with responsive container
         st.markdown('<div class="image-container">', unsafe_allow_html=True)
         profile_pic_path = "assets/photo.jpg"
         try:
             profile_img = Image.open(profile_pic_path)
-            st.image(profile_img, use_container_width=True, output_format="JPEG", clamp=True)
+            # Calculate height to maintain aspect ratio when width is 300px
+            width, height = profile_img.size
+            new_width = 300
+            new_height = int((new_width / width) * height)
+            
+            # Resize the image while maintaining aspect ratio
+            resized_img = profile_img.resize((new_width, new_height), Image.LANCZOS)
+            st.image(resized_img, use_container_width=False, width=new_width, output_format="JPEG", clamp=True)
         except Exception as e:
             st.error(f"Could not load image: {e}")
             st.write("Please ensure the image path is correct.")
         st.markdown('</div>', unsafe_allow_html=True)
     
     with col2:
-        # Text content with responsive container
+        # Simple div without additional styling to let CSS control it
         st.markdown('<div class="text-container">', unsafe_allow_html=True)
         st.markdown("""
-        <div class="profile-header">
-            <div class="profile-title">Welcome to my page! 🔥🔥🔥</div>
-            <div class="profile-intro">
+        <div class="profile-header" style="margin-left: 0; padding-left: 0;">
+            <div class="profile-title" style="margin-left: 0;">Welcome to my page! 🔥🔥🔥</div>
+            <div class="profile-intro" style="margin-left: 0; text-align: left;">
             Hi, my name is Fadhel! I'm a dedicated AI Engineer with over two years of experience in the field. 
             My passion lies in crafting innovative solutions with AI, and I'm always eager to expand my knowledge and skills.
             <br><br>
@@ -245,99 +253,16 @@ def main():
         """, unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
-    # Skills section
     st.divider()
-    # st.header("Tech Stacks")
-    
-    # # Categorized skills
-    # skills_data = {
-    #     "Programming Languages": ["Python", "SQL"],
-    #     "Frameworks & Libraries": ["Fast API", "Flask API", "Pytorch", "TensorFlow"],
-    #     "Tools & Technologies": ["Docker", "Git", "vLLM", "Open Vino", "TensorRT"],
-    # }
-    
-    # for category, skills in skills_data.items():
-    #     st.subheader(category)
-        
-    #     # Create bullet points for each skill
-    #     bullet_points = "\n".join([f"- {skill}" for skill in skills])
-    #     st.markdown(bullet_points)
-    
-    # # Experience section
-    # st.divider()
-    # st.header("Experience")
-    
-    # # Example experience items
-    # experiences = [
-    #     {
-    #         "title": "Artificial Intelligence Engineer",
-    #         "company": "PT United Tractors Tbk",
-    #         "duration": "Jul 2024 - Present",
-    #         "description": "Working on RAG systems, PDF extraction with multimodal approaches, and customer data mapping using embedding models.",
-    #         "highlights": [
-    #         "Developing RAG system to help the business consultant advancing the pitching process, the system will be able to retrieve multiple data sources from structured and unstructured data",
-    #         "Developing PDF extractor system using multimodal to help lab team advancing the data storing system",
-    #         "Developing data mapping using embedding model and semantic search to map customer data to streamline the customer search"
-    #         ]
-    #     },
-    #     {
-    #         "title": "Artificial Intelligence Engineer",
-    #         "company": "PT Asa Ren Global Nusantara",
-    #         "duration": "Mar 2024 - Jul 2024",
-    #         "description": "Built RAG systems with Claude, OCR systems using multimodal LLMs, and biomedical data standardization.",
-    #         "highlights": [
-    #             "Developed patient analysis with RAG system, utilizing Claude sonnet model",
-    #             "Developed an OCR system using multimodal LLM to extract multi variance electronic health record structure",
-    #             "Developed biomedical data standardization system to map the biomedical terms into standardized format using embedding model and semantic search"
-    #         ]
-    #     },
-    #     {
-    #         "title": "Artificial Intelligence Engineer",
-    #         "company": "PT Wide Technologies Indonesia",
-    #         "duration": "Aug 2023 - Mar 2024",
-    #         "description": "Developed computer vision solutions for face analysis, skin analysis, and eKYC processes.",
-    #         "highlights": [
-    #             "Developed a face analyzer that can classify face shape with 85% accuracy using Efficientnet and calculate facial features ratio, using Euclidean distance for glasses recommendation",
-    #             "Built a skin analysis service for skin care recommendation on a telemedicine app, using InceptionV3, DETR, and vgg16 for various skin analyses",
-    #             "Built an API service for eKYC process using MTCNN, ArcFace, and similarity measures, improving onboarding efficiency by 50%"
-    #         ]
-    #     },
-    #     {
-    #         "title": "Artificial Intelligence Engineer (Part-time)",
-    #         "company": "GAIA Dental Studio",
-    #         "duration": "May 2023 - Sep 2023",
-    #         "description": "Created AI solutions for dental and ocular disease detection, and invoice extraction.",
-    #         "highlights": [
-    #             "Created a dental disease detection API using YOLOv8 and VGG16 models with 70% mAP and 89% precision",
-    #             "Established ocular disease classification API services using VGG16 model with 89% precision",
-    #             "Designed and implemented an invoice extraction system using YOLOv8, Google Vision, and GPT 3.5 with 92% mAP"
-    #         ]
-    #     },
-    # ]
-    
-    # for exp in experiences:
-    #     st.markdown('<div class="experience-item">', unsafe_allow_html=True)
-    #     st.subheader(f"{exp['title']} | {exp['company']}")
-    #     st.markdown(f"**{exp['duration']}**")
-    #     st.markdown(exp['description'])
-        
-    #     st.markdown("**Key Achievements:**")
-    #     for highlight in exp['highlights']:
-    #         st.markdown(f"- {highlight}")
-        
-    #     st.divider()
-    
-    # Contact information
-    st.header("Contact Me")
     
     col1, col2 = st.columns(2)
     
     with col1:
         st.markdown("### Contact Information")
-        st.markdown("📧 fadhel1597l@gmail.com")
+        st.markdown("📧 fadhel1597@gmail.com")
     
     with col2:
-        st.markdown("### Social Links")
+        st.markdown("### Links")
         st.markdown("""
         - [GitHub](https://github.com/fadhel1597)
         - [LinkedIn](https://linkedin.com/in/fadhel-haidar)
