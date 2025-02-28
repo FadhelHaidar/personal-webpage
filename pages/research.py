@@ -4,7 +4,7 @@ from PIL import Image
 
 # Page configuration
 st.set_page_config(
-    page_title="Research | My Portfolio",
+    page_title="Researches | My Portfolio",
     page_icon="📚",
     layout="wide"
 )
